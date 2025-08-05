@@ -53,9 +53,6 @@
     "typescript": "^5.9.2",
     "xo": "^1.2.1"
   },
-  "publishConfig": {
-    "provenance": true
-  },
   "xo": {
     "space": true,
     "prettier": true,
