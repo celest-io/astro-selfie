@@ -1,9 +1,14 @@
 {
-	"extends": "@sindresorhus/tsconfig",
-	"compilerOptions": {
-		"moduleResolution": "node16",
-		"module": "node16",
-		"outDir": "dist"
-	},
-	"include": ["source"]
+  "compilerOptions": {
+    "outDir": "dist",
+    "baseUrl": "src",
+    "skipLibCheck": true,
+    "declaration": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"]
 }
