@@ -8,10 +8,10 @@
     "email": "yann@celest.io",
     "url": "https://github.com/celest-io"
   },
-  "homepage": "https://github.com/celest-io/astro-selfi#readme",
+  "homepage": "https://github.com/celest-io/astro-selfie#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/celest-io/astro-selfi.git"
+    "url": "git+https://github.com/celest-io/astro-selfie.git"
   },
   "type": "module",
   "main": "dist/index.js",
