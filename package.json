@@ -1,6 +1,6 @@
 {
   "name": "@celestio/astro-selfie",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Astro integration to generate page screenshots to show as Open Graph images",
   "license": "ISC",
   "author": {
