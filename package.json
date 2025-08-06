@@ -1,6 +1,6 @@
 {
   "name": "@celestio/astro-selfie",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Astro integration to generate page screenshots to show as Open Graph images",
   "license": "ISC",
   "author": {
@@ -14,11 +14,15 @@
     "url": "git+https://github.com/celest-io/astro-selfie.git"
   },
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "exports": {
-    "types": "./dist/index.d.ts",
-    "default": "./dist/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "default": "./dist/utils/index.js"
+    }
   },
   "engines": {
     "node": ">=22",

@@ -4,7 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {serve} from 'micro';
 import getPort from 'get-port';
-import type {AstroGlobal, AstroIntegration, HookParameters} from 'astro';
+import type {AstroIntegration, HookParameters} from 'astro';
 import {chromium} from 'playwright';
 import serveHandler from 'serve-handler';
 
@@ -79,20 +79,3 @@ export default function selfie(options: SelfieOptions = {}): AstroIntegration {
     },
   };
 }
-
-const stripTrailingSlash = (input: string): string => {
-  return input.replace(/\/$/, '');
-};
-
-const selfiePath = (astro: AstroGlobal): string => {
-  const pathname =
-    astro.url.pathname === '/'
-      ? '/index'
-      : stripTrailingSlash(astro.url.pathname);
-
-  return `/og${pathname}.png`;
-};
-
-export const selfieUrl = (astro: AstroGlobal): URL => {
-  return new URL(selfiePath(astro), astro.site);
-};
