@@ -1,4 +1,5 @@
 {
+  "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
     "outDir": "dist",
     "baseUrl": "src",
@@ -8,7 +9,10 @@
     "esModuleInterop": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "noEmit": false,
+    "allowImportingTsExtensions": false
   },
   "include": ["src"]
 }

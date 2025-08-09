@@ -31,9 +31,14 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "test": "xo",
     "clean": "rm -rf dist",
-    "prepare": "rm -rf dist && tsc"
+    "prepare": "rm -rf dist && tsc",
+    "check": "biome ci .",
+    "check.format": "biome format .",
+    "check.lint": "biome check .",
+    "fix": "pnpm lint && pnpm format",
+    "format": "biome format --write .",
+    "lint": "biome check --write ."
   },
   "files": [
     "dist"
@@ -44,24 +49,18 @@
   ],
   "dependencies": {
     "@playwright/browser-chromium": "^1.54.2",
+    "astro-integration-kit": "^0.18.0",
     "get-port": "^7.1.0",
     "micro": "^10.0.1",
     "playwright": "^1.54.2",
     "serve-handler": "^6.1.6"
   },
   "devDependencies": {
-    "@types/react": "^19.1.9",
+    "@biomejs/biome": "^2.1.4",
     "@types/serve-handler": "^6.1.4",
-    "astro": "^5.12.0",
-    "prettier": "^3.6.2",
-    "typescript": "^5.9.2",
-    "xo": "^1.2.1"
+    "typescript": "^5.9.2"
   },
-  "xo": {
-    "space": true,
-    "prettier": true,
-    "rules": {
-      "no-await-in-loop": "off"
-    }
+  "peerDependencies": {
+    "astro": "^5.7.0"
   }
 }
