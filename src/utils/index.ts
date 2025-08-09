@@ -1,14 +1,12 @@
-import {type AstroGlobal} from 'astro';
+import type { AstroGlobal } from "astro";
 
 const stripTrailingSlash = (input: string): string => {
-  return input.replace(/\/$/, '');
+  return input.replace(/\/$/, "");
 };
 
 const selfiePath = (astro: AstroGlobal): string => {
   const pathname =
-    astro.url.pathname === '/'
-      ? '/index'
-      : stripTrailingSlash(astro.url.pathname);
+    astro.url.pathname === "/" ? "/index" : stripTrailingSlash(astro.url.pathname);
 
   return `/og${pathname}.png`;
 };
