@@ -3,41 +3,18 @@ import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { HookParameters } from "astro";
-import { z } from "astro/zod";
-import { defineIntegration } from "astro-integration-kit";
+import { addVirtualImports, defineIntegration } from "astro-integration-kit";
 import getPort from "get-port";
 import { serve } from "micro";
 import { chromium } from "playwright";
 import serveHandler from "serve-handler";
+import { optionsSchema } from "./options.js";
 
 const name = "@celestio/astro-selfie";
 
 export const integration = defineIntegration({
   name,
-  optionsSchema: z
-    .object({
-      /**
-       * Options for the screenshot functionality.
-       */
-      screen: z
-        .object({
-          width: z.number().default(1024),
-          height: z.number().default(768),
-        })
-        .optional(),
-
-      /**
-       * Options for the viewport functionality.
-       */
-      viewport: z
-        .object({
-          width: z.number().default(1024),
-          height: z.number().default(768),
-        })
-        .optional(),
-    })
-    .optional(),
-
+  optionsSchema,
   setup({ options }) {
     const screen = options?.screen ?? { width: 1024, height: 768 };
     const viewport = options?.viewport ?? { width: 1024, height: 768 };
@@ -45,13 +22,28 @@ export const integration = defineIntegration({
 
     return {
       hooks: {
+        "astro:config:setup": (params: HookParameters<"astro:config:setup">) => {
+          addVirtualImports(params, {
+            name,
+            imports: [
+              {
+                id: `virtual:${name}/config`,
+                content: `export default ${JSON.stringify(options)}`,
+              },
+              {
+                id: `${name}:utils`,
+                content: `export * from "@celestio/astro-selfie/utils";`,
+              },
+            ],
+          });
+        },
         // eslint-disable-next-line @typescript-eslint/naming-convention
         "astro:config:done"({ config }: HookParameters<"astro:config:done">) {
           outDir = config.outDir;
         },
         // eslint-disable-next-line @typescript-eslint/naming-convention
         async "astro:build:done"({ dir, pages }: HookParameters<"astro:build:done">) {
-          const screenshotsDir = new URL("og", outDir);
+          const screenshotsDir = new URL(options?.outputDir ?? "og", outDir);
           await fs.mkdir(fileURLToPath(screenshotsDir), { recursive: true });
 
           const port = await getPort();
