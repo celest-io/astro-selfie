@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/celest-io/astro-selfie/compare/v1.1.0...v1.2.0) (2025-08-09)
+
+
+### Miscellaneous Chores
+
+* release 1.2.0 ([e04f264](https://github.com/celest-io/astro-selfie/commit/e04f2646b386ac6e26367c209540a16b6997173a))
+
 ## [1.1.0](https://github.com/celest-io/astro-selfie/compare/v1.1.0...v1.1.0) (2025-08-06)
 
 
