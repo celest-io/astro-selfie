@@ -1,11 +1,20 @@
 import config from "virtual:@celestio/astro-selfie/config";
-import type { AstroGlobal } from "astro";
+
+/**
+ * The subset of `Astro` that `selfieUrl` reads. Structural so that pages
+ * typed with their own `Props` stay assignable.
+ */
+export type SelfieAstro = {
+  url: URL;
+  site: URL | undefined;
+  props: { uri: string };
+};
 
 const stripTrailingSlash = (input: string): string => {
   return input.replace(/\/$/, "");
 };
 
-const selfiePath = (astro: AstroGlobal): string => {
+const selfiePath = (astro: SelfieAstro): string => {
   const pathname =
     astro.url.pathname === "/" ? "/index" : stripTrailingSlash(astro.props.uri);
 
@@ -13,6 +22,6 @@ const selfiePath = (astro: AstroGlobal): string => {
   return `/${outputDir}${pathname}.png`;
 };
 
-export const selfieUrl = (astro: AstroGlobal): URL => {
+export const selfieUrl = (astro: SelfieAstro): URL => {
   return new URL(selfiePath(astro), astro.site);
 };
