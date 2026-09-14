@@ -60,7 +60,7 @@ For example:
 
 ```css
 body[data-astro-selfie] .container {
-	padding: 32px 64px;
+  padding: 32px 64px;
 }
 ```
 

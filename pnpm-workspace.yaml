@@ -1,4 +1,4 @@
 allowBuilds:
-  '@playwright/browser-chromium': true
+  "@playwright/browser-chromium": true
   esbuild: false
   sharp: true

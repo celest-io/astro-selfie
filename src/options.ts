@@ -1,4 +1,3 @@
-
 export type Options = {
   screen?: {
     width: number;
@@ -9,4 +8,4 @@ export type Options = {
     height: number;
   };
   outputDir?: string;
-}
+};

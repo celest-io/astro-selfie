@@ -2,17 +2,17 @@ import fs from "node:fs/promises";
 import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Plugin } from "vite";
+
 import type { AstroIntegration, AstroIntegrationLogger } from "astro";
 import getPort from "get-port";
 import { serve } from "micro";
 import { chromium } from "playwright";
 import serveHandler from "serve-handler";
+import type { Plugin } from "vite";
+
 import type { Options } from "./options.js";
 
 const name = "@celestio/astro-selfie";
-
-
 
 export function createPlugin(options: Options, logger: AstroIntegrationLogger): Plugin {
   const virtualModuleId = `virtual:${name}/config`;
@@ -32,14 +32,14 @@ export function createPlugin(options: Options, logger: AstroIntegrationLogger): 
         id: new RegExp(`^${resolvedVirtualModuleId}$`),
       },
       handler() {
-        logger.debug("Loading virtual module with options: "+ JSON.stringify(options));
-        return `export default ${JSON.stringify(options)}`
+        logger.debug("Loading virtual module with options: " + JSON.stringify(options));
+        return `export default ${JSON.stringify(options)}`;
       },
     },
   };
 }
 
-export function integration(cfg: Options): AstroIntegration{
+export function integration(cfg: Options): AstroIntegration {
   if (cfg.screen) {
     if (cfg.screen.width <= 0 || cfg.screen.height <= 0) {
       throw new Error("Screen dimensions must be positive numbers.");
@@ -54,25 +54,29 @@ export function integration(cfg: Options): AstroIntegration{
   const screen = cfg.screen ?? { width: 1024, height: 768 };
   const viewport = cfg.viewport ?? { width: 1024, height: 768 };
   const outputDir = cfg.outputDir ?? "og";
-  const config: Options = {screen, viewport, outputDir};
+  const config: Options = { screen, viewport, outputDir };
 
   let outDir: URL;
   const componentsEntry = fileURLToPath(new URL("./utils/index.js", import.meta.url));
 
-  const handleConfigDone: AstroIntegration['hooks']['astro:config:done'] = ({config, injectTypes}) =>  {
+  const handleConfigDone: AstroIntegration["hooks"]["astro:config:done"] = ({
+    config,
+    injectTypes,
+  }) => {
     outDir = config.outDir;
     injectTypes({
       filename: "utils.d.ts",
       content: `declare module ${JSON.stringify(`${name}:utils`)} {\n  export * from ${JSON.stringify(`${name}/utils`)};\n}\n`,
     });
-  }
+  };
 
-  const handleConfigSetup: AstroIntegration['hooks']['astro:config:setup'] = ({updateConfig, logger}) =>  {
+  const handleConfigSetup: AstroIntegration["hooks"]["astro:config:setup"] = ({
+    updateConfig,
+    logger,
+  }) => {
     updateConfig({
       vite: {
-        plugins: [
-          createPlugin(config, logger),
-        ],
+        plugins: [createPlugin(config, logger)],
         resolve: {
           // Cloudflare's workerd dev pipeline can prebundle bare package
           // imports before Vite virtual modules are available.
@@ -80,11 +84,14 @@ export function integration(cfg: Options): AstroIntegration{
             "@celestio/astro-selfie:utils": componentsEntry,
           },
         },
-      }
+      },
     });
-  }
+  };
 
-  const handleBuildDone: AstroIntegration['hooks']['astro:build:done'] = async ({ dir, pages }) => {
+  const handleBuildDone: AstroIntegration["hooks"]["astro:build:done"] = async ({
+    dir,
+    pages,
+  }) => {
     const screenshotsDir = new URL(outputDir, outDir);
     await fs.mkdir(fileURLToPath(screenshotsDir), { recursive: true });
 
@@ -126,7 +133,7 @@ export function integration(cfg: Options): AstroIntegration{
 
     await browser.close();
     server.close();
-  }
+  };
 
   return {
     name,
@@ -135,5 +142,5 @@ export function integration(cfg: Options): AstroIntegration{
       "astro:config:done": handleConfigDone,
       "astro:build:done": handleBuildDone,
     },
-  }
-};
+  };
+}
