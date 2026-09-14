@@ -33,12 +33,12 @@
     "dev": "tsc --watch",
     "clean": "rm -rf dist",
     "prepare": "rm -rf dist && tsc",
-    "check": "biome ci .",
-    "check.format": "biome format .",
-    "check.lint": "biome check .",
+    "check": "oxlint && oxfmt --check .",
+    "check.format": "oxfmt --check .",
+    "check.lint": "oxlint",
     "fix": "pnpm lint && pnpm format",
-    "format": "biome format --write .",
-    "lint": "biome check --write ."
+    "format": "oxfmt .",
+    "lint": "oxlint --fix"
   },
   "files": [
     "dist"
@@ -48,19 +48,20 @@
     "astro"
   ],
   "dependencies": {
-    "@playwright/browser-chromium": "^1.54.2",
-    "astro-integration-kit": "^0.18.0",
-    "get-port": "^7.1.0",
+    "@playwright/browser-chromium": "^1.63.0",
+    "get-port": "^7.2.0",
     "micro": "^10.0.1",
-    "playwright": "^1.54.2",
-    "serve-handler": "^6.1.6"
+    "playwright": "^1.63.0",
+    "serve-handler": "^6.1.7",
+    "vite": "^8.3.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.1.4",
     "@types/serve-handler": "^6.1.4",
-    "typescript": "^5.9.2"
+    "oxfmt": "^0.67.0",
+    "oxlint": "^1.82.0",
+    "typescript": "^6.0.3"
   },
   "peerDependencies": {
-    "astro": "^5.7.0"
+    "astro": "^7.0.0"
   }
 }

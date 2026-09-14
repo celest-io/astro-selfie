@@ -2,7 +2,7 @@
   "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
     "outDir": "dist",
-    "baseUrl": "src",
+    "rootDir": "src",
     "skipLibCheck": true,
     "declaration": true,
     "strict": true,
