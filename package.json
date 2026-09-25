@@ -26,8 +26,9 @@
   },
   "engines": {
     "node": ">=22",
-    "pnpm": ">=10"
+    "pnpm": ">=12"
   },
+  "packageManager": "pnpm@12.6.0",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
