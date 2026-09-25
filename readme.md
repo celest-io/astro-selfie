@@ -1,8 +1,10 @@
-# astro-selfie [![test](https://github.com/vadimdemedes/astro-selfie/actions/workflows/test.yml/badge.svg)](https://github.com/vadimdemedes/astro-selfie/actions/workflows/test.yml)
+# astro-selfie [![test](https://github.com/celest-io/astro-selfie/actions/workflows/test.yml/badge.svg)](https://github.com/celest-io/astro-selfie/actions/workflows/test.yml)
 
 > [Astro](https://astro.build) integration to generate page screenshots to show as Open Graph images.
 
-I use this extension on [my website](https://vadimdemedes.com) and my link previews on Twitter look [like this](https://twitter.com/vadimdemedes/status/1664261504168755201):
+Maintained fork of [astro-selfie](https://github.com/vadimdemedes/astro-selfie), originally created by [Vadim Demedes](https://github.com/vadimdemedes). Thanks to Vadim for the original work.
+
+Link previews generated with this integration look like this:
 
 <img src="example.png" width="600">
 
