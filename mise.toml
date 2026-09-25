@@ -1,0 +1,24 @@
+min_version = "2026.7.3"
+
+[settings]
+lockfile = true
+locked = true
+
+[tools]
+hk = "2.2.0"
+actionlint = "1.7.12"
+zizmor = "1.30.1"
+shfmt = "3.14.1"
+shellcheck = "0.11.0"
+editorconfig-checker = "4.0.1"
+
+[hooks]
+postinstall = "hk install --mise"
+
+[tasks.lint-check]
+description = "Run lint + formatting checks"
+run = "hk check --all --no-fail-fast"
+
+[tasks.lint-fix]
+description = "Auto-fix lint + formatting issues"
+run = "hk fix --all --no-fail-fast"
