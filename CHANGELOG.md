@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/celest-io/astro-selfie/compare/v1.2.0...v2.0.0) (2026-09-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate to astro 7 ([#6](https://github.com/celest-io/astro-selfie/issues/6))
+
+### Features
+
+* migrate to astro 7 ([#6](https://github.com/celest-io/astro-selfie/issues/6)) ([5dd985a](https://github.com/celest-io/astro-selfie/commit/5dd985a6d085c5d28fea3bfdfaf2cb8e00a5db6c))
+
+
+### Bug Fixes
+
+* restore pathname-based selfieUrl and allow selfie() without options ([#10](https://github.com/celest-io/astro-selfie/issues/10)) ([4705799](https://github.com/celest-io/astro-selfie/commit/47057998307adb722ff64da9ed4b5df8fb9bcb93))
+
 ## [1.2.0](https://github.com/celest-io/astro-selfie/compare/v1.1.0...v1.2.0) (2025-08-09)
 
 
