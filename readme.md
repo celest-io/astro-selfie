@@ -10,35 +10,46 @@ Link previews generated with this integration look like this:
 
 Inspired by [Simon Willison's](https://simonwillison.net) website.
 
+## Requirements
+
+- Astro 7 (`astro@^7.0.0`)
+- Node.js 22 or later
+- A platform that can run headless Chromium (via [Playwright](https://playwright.dev)) during `astro build`
+- Static output; screenshots are taken of the built pages
+
 ## Install
 
 ```console
-npm install --save-dev astro-selfie
+npx astro add @celestio/astro-selfie
+```
+
+Or install it manually:
+
+```console
+npm install --save-dev @celestio/astro-selfie
+```
+
+Chromium is downloaded by the `@playwright/browser-chromium` install script. pnpm 10+ skips dependency install scripts by default, so approve it with `pnpm approve-builds`, or install the browser directly:
+
+```console
+npx playwright install chromium
 ```
 
 ## Usage
 
 ### 1. Set up integration
 
-Add this integration to `astro.config.mjs`:
+Add the integration to `astro.config.mjs` (`astro add` does this for you). Set `site`, since screenshot URLs are absolute:
 
 ```diff
 import {defineConfig} from 'astro/config';
-+ import selfie from 'astro-selfie';
++ import selfie from '@celestio/astro-selfie';
 
 export default defineConfig({
-+    integrations: [
-+        // Make sure `astro-selfie` only runs locally
-+        !process.env['CI'] && !process.env['VERCEL'] && selfie()
-+    ].filter(Boolean)
++    site: 'https://example.com',
++    integrations: [selfie()],
 });
 ```
-
-This integration is meant to be used locally for statically built websites for several reasons:
-
-1. Websites deployed to Vercel don't have access to headless Chrome due to platform limitations.
-2. Open graph images aren't probably useful in continuous integration.
-3. Taking screenshots is not quick.
 
 ### 2. Add meta tags
 
@@ -46,7 +57,7 @@ Then, add a `<meta>` tag to each page that points to a screenshot of itself.
 
 ```astro
 ---
-import {selfieUrl} from 'astro-selfie';
+import {selfieUrl} from '@celestio/astro-selfie:utils';
 
 const screenshotUrl = selfieUrl(Astro);
 ---
@@ -68,23 +79,46 @@ body[data-astro-selfie] .container {
 
 ### 4. Generate screenshots
 
-Run a build command to take screenshots of all pages and store them in `public/og` directory.
+Screenshots are taken at the end of `astro build` and written to `og/` inside the build output (`dist/og` by default), so they are deployed with the site.
 
 ```console
 npx astro build
 ```
 
-Once screenshots are generated, commit them to version control and deploy.
+The integration must therefore run in the build you deploy. Each page waits 3 seconds before its screenshot, so builds of large sites take longer.
 
 ## API
 
-### selfie()
+### selfie(options?)
 
 Returns an Astro integration that takes page screenshots.
 
+#### options
+
+##### screen
+
+Type: `{width: number; height: number}`\
+Default: `{width: 1024, height: 768}`
+
+Screen size of the browser.
+
+##### viewport
+
+Type: `{width: number; height: number}`\
+Default: `{width: 1024, height: 768}`
+
+Viewport size, which is also the screenshot size.
+
+##### outputDir
+
+Type: `string`\
+Default: `'og'`
+
+Directory for screenshots, relative to the build output directory.
+
 ### selfieUrl(astro): URL
 
-Returns a URL to the screenshot of the current page.
+Import from `@celestio/astro-selfie:utils`. Returns the URL of the screenshot of the current page.
 
 #### astro
 

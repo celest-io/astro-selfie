@@ -7,7 +7,6 @@ import config from "virtual:@celestio/astro-selfie/config";
 export type SelfieAstro = {
   url: URL;
   site: URL | undefined;
-  props: { uri: string };
 };
 
 const stripTrailingSlash = (input: string): string => {
@@ -16,7 +15,7 @@ const stripTrailingSlash = (input: string): string => {
 
 const selfiePath = (astro: SelfieAstro): string => {
   const pathname =
-    astro.url.pathname === "/" ? "/index" : stripTrailingSlash(astro.props.uri);
+    astro.url.pathname === "/" ? "/index" : stripTrailingSlash(astro.url.pathname);
 
   const outputDir = stripTrailingSlash(config?.outputDir);
   return `/${outputDir}${pathname}.png`;
