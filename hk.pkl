@@ -1,0 +1,66 @@
+amends "package://github.com/jdx/hk/releases/download/v2.2.0/hk@2.2.0#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.2.0/hk@2.2.0#/Builtins.pkl"
+
+local allLinters = new Mapping<String, Step> {
+  // repo guards
+  ["check-merge-conflict"] = Builtins.check_merge_conflict
+  ["check-executables-have-shebangs"] = Builtins.check_executables_have_shebangs
+  ["check-added-large-files"] = Builtins.check_added_large_files
+  ["check-case-conflict"] = Builtins.check_case_conflict
+  ["check-symlinks"] = Builtins.check_symlinks
+  ["detect-private-key"] = Builtins.detect_private_key
+  ["mixed-line-ending"] = Builtins.mixed_line_ending
+  ["trailing-whitespace"] = Builtins.trailing_whitespace
+  ["newlines"] = Builtins.newlines
+  ["editorconfig-checker"] = Builtins.editorconfig_checker
+
+  ["actionlint"] = Builtins.actionlint
+  ["zizmor"] {
+    glob = ".github/workflows/*.{yml,yaml}"
+    check = "zizmor .github/workflows/"
+  }
+  ["shfmt"] = Builtins.shfmt
+  ["shellcheck"] = Builtins.shellcheck
+
+  ["lint"] {
+    glob = "**/*.{ts,tsx,js,mjs,cjs}"
+    check = "pnpm check.lint"
+    fix = "pnpm lint"
+  }
+}
+
+// If mise.toml or its lockfile changed, regenerate mise.lock for both linux-arm64 & macos-arm64 arch.
+local miseLock = new Step {
+  glob = List("mise.toml", "mise.lock")
+  fix = "mise lock --platform linux-arm64,macos-arm64"
+  stage = "mise.lock"
+}
+
+hooks {
+  // If mise-pinned versions change, auto-install them on pull (merge & rebase).
+  ["post-merge"] {
+    steps {
+      ["mise-install"] { glob = "mise.toml"; check = "mise install" }
+    }
+  }
+  ["post-rewrite"] {
+    steps {
+      ["mise-install"] { glob = "mise.toml"; check = "mise install" }
+    }
+  }
+  ["pre-commit"] {
+    fix = true
+    stash = "git"
+    steps = (allLinters) {
+      ["no-commit-to-branch"] = Builtins.no_commit_to_branch
+      ["mise-lock"] = miseLock
+    }
+  }
+  ["check"] {
+    steps = allLinters
+  }
+  ["fix"] {
+    fix = true
+    steps = allLinters
+  }
+}

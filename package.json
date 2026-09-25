@@ -57,9 +57,9 @@
   },
   "devDependencies": {
     "@types/serve-handler": "^6.1.4",
-    "oxfmt": "^0.67.0",
-    "oxlint": "^1.82.0",
-    "typescript": "^6.0.3"
+    "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
+    "typescript": "^7.0.2"
   },
   "peerDependencies": {
     "astro": "^7.0.0"
