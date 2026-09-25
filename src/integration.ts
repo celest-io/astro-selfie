@@ -39,7 +39,7 @@ export function createPlugin(options: Options, logger: AstroIntegrationLogger): 
   };
 }
 
-export function integration(cfg: Options): AstroIntegration {
+export function integration(cfg: Options = {}): AstroIntegration {
   if (cfg.screen) {
     if (cfg.screen.width <= 0 || cfg.screen.height <= 0) {
       throw new Error("Screen dimensions must be positive numbers.");
