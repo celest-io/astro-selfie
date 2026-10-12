@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/celest-io/astro-selfie/compare/v2.0.0...v2.0.1) (2026-10-12)
+
+
+### Bug Fixes
+
+* write screenshots to the deployed dir and match og:image urls for any build format, base and adapter ([#13](https://github.com/celest-io/astro-selfie/issues/13)) ([ed89e3b](https://github.com/celest-io/astro-selfie/commit/ed89e3b9a5a6218ecb8f5d65fdccc20f78f588c1))
+
 ## [2.0.0](https://github.com/celest-io/astro-selfie/compare/v1.2.0...v2.0.0) (2026-09-25)
 
 
