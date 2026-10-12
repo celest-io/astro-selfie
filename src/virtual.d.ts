@@ -1,4 +1,4 @@
 declare module "virtual:@celestio/astro-selfie/config" {
-  const Config: import("./src/options.js").Options;
+  const Config: import("./src/options.js").ResolvedOptions;
   export default Config;
 }

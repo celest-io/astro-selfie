@@ -9,3 +9,6 @@ export type Options = {
   };
   outputDir?: string;
 };
+
+/** Options passed to the runtime helpers through the virtual module. */
+export type ResolvedOptions = Required<Options> & { base: string };

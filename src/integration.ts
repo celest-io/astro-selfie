@@ -10,11 +10,15 @@ import { chromium } from "playwright";
 import serveHandler from "serve-handler";
 import type { Plugin } from "vite";
 
-import type { Options } from "./options.js";
+import type { Options, ResolvedOptions } from "./options.js";
+import { screenshotName, stripBase } from "./paths.js";
 
 const name = "@celestio/astro-selfie";
 
-export function createPlugin(options: Options, logger: AstroIntegrationLogger): Plugin {
+export function createPlugin(
+  options: ResolvedOptions,
+  logger: AstroIntegrationLogger,
+): Plugin {
   const virtualModuleId = `virtual:${name}/config`;
   const resolvedVirtualModuleId = `\0${virtualModuleId}`;
   return {
@@ -54,16 +58,14 @@ export function integration(cfg: Options = {}): AstroIntegration {
   const screen = cfg.screen ?? { width: 1024, height: 768 };
   const viewport = cfg.viewport ?? { width: 1024, height: 768 };
   const outputDir = cfg.outputDir ?? "og";
-  const config: Options = { screen, viewport, outputDir };
+  // `base` is filled in from the Astro config before the virtual module loads.
+  const config: ResolvedOptions = { screen, viewport, outputDir, base: "/" };
 
-  let outDir: URL;
   const componentsEntry = fileURLToPath(new URL("./utils/index.js", import.meta.url));
 
   const handleConfigDone: AstroIntegration["hooks"]["astro:config:done"] = ({
-    config,
     injectTypes,
   }) => {
-    outDir = config.outDir;
     injectTypes({
       filename: "utils.d.ts",
       content: `declare module ${JSON.stringify(`${name}:utils`)} {\n  export * from ${JSON.stringify(`${name}/utils`)};\n}\n`,
@@ -71,9 +73,11 @@ export function integration(cfg: Options = {}): AstroIntegration {
   };
 
   const handleConfigSetup: AstroIntegration["hooks"]["astro:config:setup"] = ({
+    config: astroConfig,
     updateConfig,
     logger,
   }) => {
+    config.base = astroConfig.base;
     updateConfig({
       vite: {
         plugins: [createPlugin(config, logger)],
@@ -92,7 +96,9 @@ export function integration(cfg: Options = {}): AstroIntegration {
     dir,
     pages,
   }) => {
-    const screenshotsDir = new URL(outputDir, outDir);
+    // `dir` is the folder that gets deployed as static files: `outDir` for
+    // static sites, the client folder (e.g. `dist/client/`) with an adapter.
+    const screenshotsDir = new URL(`${outputDir.replace(/^\/+|\/+$/g, "")}/`, dir);
     await fs.mkdir(fileURLToPath(screenshotsDir), { recursive: true });
 
     const port = await getPort();
@@ -100,6 +106,8 @@ export function integration(cfg: Options = {}): AstroIntegration {
 
     const server = new http.Server(
       serve(async (request, response) => {
+        // Pages reference assets under `base`, but the files sit at the root of `dir`.
+        request.url = stripBase(request.url ?? "/", config.base);
         await serveHandler(request, response, {
           public: fileURLToPath(dir),
         });
@@ -124,7 +132,7 @@ export function integration(cfg: Options = {}): AstroIntegration {
 
       const screenshotPath = path.join(
         fileURLToPath(screenshotsDir),
-        pathname === "" ? "index.png" : `${pathname}.png`,
+        `${screenshotName(pathname)}.png`,
       );
 
       await fs.mkdir(path.dirname(screenshotPath), { recursive: true });
